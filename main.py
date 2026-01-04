@@ -1,5 +1,28 @@
 import subprocess
 import argparse
+import sys
+
+def print_table(symbols: list[dict[str, str]]) -> None:
+
+    if not symbols:
+        print("(no exported functions)")
+        return
+
+    name_w = max(len(s["name"]) for s in symbols)
+    name_w = max(name_w, 20)
+
+    header = f"{'NAME'.ljust(name_w)}  TYPE   BIND   VIS"
+
+    print(header)
+    print("-" * len(header))
+
+    for s in symbols:
+        print(
+            f"{s['name'].ljust(name_w)}  "
+            f"{s['type'].ljust(6)} "
+            f"{s['bind'].ljust(6)} "
+            f"{s['vis']}"
+        )
 
 def parse_readelf_symbol_line(line: str) -> dict[str, str] | None:
     parts = line.split()
@@ -9,7 +32,7 @@ def parse_readelf_symbol_line(line: str) -> dict[str, str] | None:
     keys = ["num", "value", "size", "type", "bind", "vis", "ndx", "name"]
     return dict(zip(keys, parts[:8]))
 
-def so_exported_functions(so_path: str, demangle = False) -> set[str]:
+def so_exported_functions(so_path: str, demangle : bool = False) -> list[dict[str, str]] | None:
 
     cmd = ["readelf", "-Ws"]
     if demangle:
@@ -23,7 +46,7 @@ def so_exported_functions(so_path: str, demangle = False) -> set[str]:
         check=True,
     )
 
-    exported_funcs: set[str] = set()
+    exported_funcs: list[dict[str, str]] = []
 
     for line in p.stdout.splitlines():
         parsed_data = parse_readelf_symbol_line(line)
@@ -36,7 +59,12 @@ def so_exported_functions(so_path: str, demangle = False) -> set[str]:
             and parsed_data["ndx"] != "UND"
             and parsed_data["bind"] in ("GLOBAL", "WEAK")
         ):
-            exported_funcs.add(parsed_data["name"])
+            exported_funcs.append({
+                "name": parsed_data["name"],
+                "type": parsed_data["type"],
+                "bind": parsed_data["bind"],
+                "vis": parsed_data["vis"],
+            })
 
     return exported_funcs
 
@@ -49,7 +77,29 @@ if __name__ == "__main__":
         action="store_true",
         help="demangle symbol names"
     )
+    parser.add_argument(
+        "--pretty-output",
+        action="store_true",
+        help="pretty output"
+    )
     args = parser.parse_args()
-    exported_funcs = so_exported_functions(args.file)
 
-    print(exported_funcs)
+    try:
+        names = so_exported_functions(args.file, demangle=args.demangle)
+        if args.pretty_output:
+            print_table(names)
+        else:
+            print(names)
+
+    except subprocess.CalledProcessError as e:
+        err = (e.stderr or e.stdout or "").strip()
+        print(f"ERROR: readelf failed\n{err}", file=sys.stderr)
+        exit()
+    except Exception as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        exit()
+
+
+
+
+
