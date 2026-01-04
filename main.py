@@ -77,6 +77,7 @@ def so_exported_functions(so_path: str, demangle : bool = False) -> list[dict[st
                 "vis": parsed_data["vis"],
             })
 
+    exported_funcs.sort(key=lambda x: x["name"])
     return exported_funcs
 
 if __name__ == "__main__":
