@@ -17,16 +17,16 @@ int func1(int a, int b) {
     return 0;
 }
 
-void func1(const char *msg) {
+void func2(const char *msg) {
 }
 
 /////////////////////////////////////
 
-static int static_mul(int a, int b) {
+static int static_func1(int a, int b) {
     return 0;
 }
 
-static void static_trace(const char *msg) {
+static void static_func2(const char *msg) {
 }
 
 /////////////////////////////////////
@@ -35,7 +35,7 @@ VISIBILITY_DEFAULT int default_func1(int a, int b) {
     return 0;
 }
 
-VISIBILITY_DEFAULT void default_func1(const char *msg) {
+VISIBILITY_DEFAULT void default_func2(const char *msg) {
 }
 
 /////////////////////////////////////
