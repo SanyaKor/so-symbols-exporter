@@ -58,4 +58,3 @@ VISIBILITY_WEAK void weak_func2(const char *msg) {
 }
 
 
-
