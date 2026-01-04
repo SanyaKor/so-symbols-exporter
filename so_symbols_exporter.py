@@ -1,3 +1,4 @@
+import subprocess
 
 def parse_readelf_symbol_line(line: str) -> dict[str, str] | None:
     parts = line.split()
