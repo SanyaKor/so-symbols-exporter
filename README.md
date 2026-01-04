@@ -106,9 +106,9 @@ Exported native functions: 4
 +---------------------------+--------+--------+----------+
 | Name                      | Type   | Bind   | Vis      |
 +---------------------------+--------+--------+----------+
-| call_hidden               | FUNC   | GLOBAL | DEFAULT  |
+| call_smth                 | FUNC   | GLOBAL | DEFAULT  |
 | default_func1(int,int)    | FUNC   | GLOBAL | DEFAULT  |
-| default_func1(char*)     | FUNC   | GLOBAL | DEFAULT  |
+| default_func1(char*)      | FUNC   | GLOBAL | DEFAULT  |
 | weak_func2(char*)         | FUNC   | WEAK   | DEFAULT  |
 +---------------------------+--------+--------+----------+
 ```
