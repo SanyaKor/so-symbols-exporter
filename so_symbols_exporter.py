@@ -64,6 +64,9 @@ def so_exported_functions(so_path: str, demangle : bool = True) -> list[dict[str
 
     exported_symbols: list[dict[str, str]] = []
 
+    ### NOTES
+    # Symbols may exist in both symtab and dynsym, but symtab can
+    # contain symbols that are not present in `dynsym.
     in_symtab = False
 
     for line in p.stdout.splitlines():
