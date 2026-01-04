@@ -1,5 +1,5 @@
 import pytest
-from main import so_exported_functions, parse_readelf_symbol_line
+from so_symbols_exporter import so_exported_functions, parse_readelf_symbol_line
 
 
 def test_parser():
