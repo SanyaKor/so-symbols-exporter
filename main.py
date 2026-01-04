@@ -9,9 +9,15 @@ def parse_readelf_symbol_line(line: str) -> dict[str, str] | None:
     keys = ["num", "value", "size", "type", "bind", "vis", "ndx", "name"]
     return dict(zip(keys, parts[:8]))
 
-def so_exported_functions(so_path: str) -> set[str]:
+def so_exported_functions(so_path: str, demangle = False) -> set[str]:
+
+    cmd = ["readelf", "-Ws"]
+    if demangle:
+        cmd.append("--demangle")
+
+    cmd.append(so_path)
     p = subprocess.run(
-        ["readelf", "-Ws", so_path],
+        cmd,
         capture_output=True,
         text=True,
         check=True,
@@ -38,7 +44,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="sotest",
                                      description="so?")
     parser.add_argument("--file", required=True, help="file")
-
+    parser.add_argument(
+        "--demangle",
+        action="store_true",
+        help="demangle symbol names"
+    )
     args = parser.parse_args()
     exported_funcs = so_exported_functions(args.file)
 
