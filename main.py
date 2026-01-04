@@ -59,16 +59,25 @@ def so_exported_functions(so_path: str, demangle : bool = False) -> list[dict[st
 
     exported_funcs: list[dict[str, str]] = []
 
+    in_symtab = False
+
     for line in p.stdout.splitlines():
+        s = line.strip()
+
+        if s.startswith("Symbol table '"):
+            in_symtab = "'.symtab'" in s
+            continue
+        if not in_symtab:
+            continue
+
         parsed_data = parse_readelf_symbol_line(line)
         if not parsed_data:
             continue
 
-
         if (
-            parsed_data["type"] in ("FUNC", "IFUNC")
-            and parsed_data["ndx"] != "UND"
-            and parsed_data["bind"] in ("GLOBAL", "WEAK")
+                parsed_data["type"] in ("FUNC", "IFUNC")
+                and parsed_data["ndx"] != "UND"
+                and parsed_data["bind"] in ("GLOBAL", "WEAK")
         ):
             exported_funcs.append({
                 "name": parsed_data["name"],
