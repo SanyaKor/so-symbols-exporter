@@ -41,3 +41,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     exported_funcs = so_exported_functions(args.file)
+
+    print(exported_funcs)
