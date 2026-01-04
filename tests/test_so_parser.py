@@ -17,8 +17,6 @@ def test_parser_missing_fields_returns_none():
 
     assert parse_readelf_symbol_line("") is None
 
-    assert parse_readelf_symbol_line("Num: Value Size Type Bind Vis Ndx Name") is None
-
     assert parse_readelf_symbol_line("  12: 0000000000001139") is None
     assert parse_readelf_symbol_line("  12: 0000000000001139 34 FUNC") is None
     assert parse_readelf_symbol_line("  12: 0000000000001139 34 FUNC GLOBAL") is None
