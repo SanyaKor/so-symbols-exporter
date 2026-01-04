@@ -44,6 +44,25 @@ def test_duplication():
     assert len(names) == len(set(names)), f"duplicates found: {names}"
 
 
+def test_allowed_symbols():
+    export_symbols = so_exported_functions(
+        str(Path(__file__).resolve().parents[1] / "sample" / "libtestc.so")
+    )
+
+    ### Regarding allowed types, u can try to discover OBJECT type,
+    # since not only funcs can be accessible
+    allowed_types = {"FUNC", "IFUNC"}
+    allowed_binds = {"GLOBAL", "WEAK"}
+
+    assert export_symbols, "no exported functions found"
+
+    for sym in export_symbols:
+        assert sym["type"] in allowed_types, f"unexpected type: {sym}"
+        assert sym["bind"] in allowed_binds, f"unexpected bind: {sym}"
+
+
+
+
 
 
 
