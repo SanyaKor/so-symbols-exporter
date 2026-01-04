@@ -100,11 +100,13 @@ def run():
         "Uses readelf to extract function symbols implemented in the file "
         "(excluding imported/undefined symbols).\n\n"
         "Example:\n"
-        "  so-symbols-exporter --file libexample.so\n"
-        "  so-symbols-exporter --file libexample.so --pretty-output"
+        "  so-symbols-exporter libexample.so\n"
+        "  so-symbols-exporter libexample.so --pretty-output"
     ))
-    parser.add_argument("--file", required=True, help="Path to the .so file")
-
+    parser.add_argument(
+        "file",
+        help="Path to the .so file"
+    )
     parser.add_argument(
         "--pretty-output",
         action="store_true",
