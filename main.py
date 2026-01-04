@@ -29,12 +29,23 @@ def parse_readelf_symbol_line(line: str) -> dict[str, str] | None:
     if len(parts) < 8:
         return None
 
-    keys = ["num", "value", "size", "type", "bind", "vis", "ndx", "name"]
-    return dict(zip(keys, parts[:8]))
+    num, value, size, sym_type, bind, vis, ndx = parts[:7]
+    name = " ".join(parts[7:])
+
+    return {
+        "num": num,
+        "value": value,
+        "size": size,
+        "type": sym_type,
+        "bind": bind,
+        "vis": vis,
+        "ndx": ndx,
+        "name": name,
+    }
 
 def so_exported_functions(so_path: str, demangle : bool = False) -> list[dict[str, str]] | None:
 
-    cmd = ["readelf", "-Ws"]
+    cmd = ["readelf", "-Ws", "--syms"]
     if demangle:
         cmd.append("--demangle")
 
